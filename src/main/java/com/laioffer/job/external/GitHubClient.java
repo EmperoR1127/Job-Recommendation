@@ -42,7 +42,11 @@ public class GitHubClient {
                 return Collections.emptyList();
             }
             ObjectMapper mapper = new ObjectMapper();
-            return Arrays.asList(mapper.readValue(entity.getContent(), Item[].class));
+
+            List<Item> items = Arrays.asList(mapper.readValue(entity.getContent(), Item[].class));
+            // extract keywords for each job item.
+            extractKeywords(items);
+            return items;
         };
 
         try {
@@ -52,4 +56,33 @@ public class GitHubClient {
         }
         return Collections.emptyList();
     }
+
+    private void extractKeywords(List<Item> items) {
+        MonkeyLearnClient monkeyLearnClient = new MonkeyLearnClient();
+        List<String> descriptions = new ArrayList<>();
+        for (Item item : items) {
+            // replace illegal characters.
+            String description = item.getDescription().replaceAll("·", " ");
+            descriptions.add(description);
+        }
+
+        List<Set<String>> keywordList = monkeyLearnClient.extract(descriptions);
+        for (int i = 0; i < items.size(); i++) {
+            items.get(i).setKeywords(keywordList.get(i));
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

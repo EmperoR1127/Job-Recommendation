@@ -1,6 +1,7 @@
 package com.laioffer.job.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.laioffer.job.db.MySQLConnection;
 import com.laioffer.job.entity.Item;
 import com.laioffer.job.external.GitHubClient;
 
@@ -14,13 +15,21 @@ import java.util.*;
 public class SearchServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String userId = request.getParameter("user_id");
         double lat = Double.parseDouble(request.getParameter("lat"));
         double lon = Double.parseDouble(request.getParameter("lon"));
+        
+        MySQLConnection connection = new MySQLConnection();
+        Set<String> favoritedItemIds = connection.getFavoriteItemIds(userId);
+        connection.close();
 
         GitHubClient client = new GitHubClient();
-        response.setContentType("application/json");
         // returns job positions as a list of items.
         List<Item> items = client.search(lat, lon, null);
+        for (Item item : items) {
+            item.setFavorite(favoritedItemIds.contains(item.getId()));
+        }
+        response.setContentType("application/json");
         ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(response.getWriter(), items);
     }

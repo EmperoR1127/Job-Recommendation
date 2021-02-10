@@ -218,7 +218,6 @@ public class MySQLConnection {
             statement.setString(2, password);
             statement.setString(3, firstname);
             statement.setString(4, lastname);
-            ResultSet rs = statement.executeQuery();
             return statement.executeUpdate() == 1;
         } catch (SQLException e) {
             e.printStackTrace();

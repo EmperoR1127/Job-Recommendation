@@ -12,10 +12,6 @@ import java.io.IOException;
 
 @WebServlet(name = "LoginServlet", urlPatterns = {"/login"})
 public class LoginServlet extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    
-    }
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -24,6 +20,8 @@ public class LoginServlet extends HttpServlet {
         MySQLConnection connection = new MySQLConnection();
         LoginResponseBody loginResponseBody;
         if (connection.verifyLogin(body.userId, body.password)) {
+            // create a session and save it to sever memory.
+            // send session id to client from cookie.
             HttpSession session = request.getSession();
             session.setAttribute("user_id", body.userId);
             loginResponseBody = new LoginResponseBody("OK", body.userId, connection.getFullname(body.userId));

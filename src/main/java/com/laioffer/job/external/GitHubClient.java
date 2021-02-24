@@ -68,7 +68,9 @@ public class GitHubClient {
 
         List<Set<String>> keywordList = monkeyLearnClient.extract(descriptions);
         for (int i = 0; i < items.size(); i++) {
-            items.get(i).setKeywords(keywordList.get(i));
+            if (keywordList.size() >= i + 1) {
+                items.get(i).setKeywords(keywordList.get(i));
+            }
         }
     }
 }

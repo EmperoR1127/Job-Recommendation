@@ -6,8 +6,6 @@ import com.laioffer.job.entity.ExtractRequestBody;
 import com.laioffer.job.entity.ExtractResponseItem;
 import com.laioffer.job.entity.Extraction;
 import org.apache.http.HttpEntity;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
